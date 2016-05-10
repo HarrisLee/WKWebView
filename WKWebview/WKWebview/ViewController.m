@@ -33,11 +33,20 @@
     config.allowsPictureInPictureMediaPlayback = YES;  //是否支持视频以画中画的格式播放
     config.allowsInlineMediaPlayback = YES;   //是否支持在线录像播放
     
+//    //另外一种添加Cookie的方式  用在AJAX
+//    WKUserScript * cookieScript = [[WKUserScript alloc]
+//                                   initWithSource: @"document.cookie = 'TeskCookieKey1=TeskCookieValue1';document.cookie = 'TeskCookieKey2=TeskCookieValue2';"
+//                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+//    // again, use stringWithFormat: in the above line to inject your values programmatically
+//    [userController addUserScript:cookieScript];
+    
     web = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) configuration:config];
     web.navigationDelegate = self;
     web.UIDelegate = self;
-    NSURL *url = [NSURL URLWithString:@"http://www.suning.com"];
+    NSURL *url = [NSURL URLWithString:@"http://www.baidu.com"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+//    //设置Cookie
+//    [request addValue:@"TeskCookieKey1=TeskCookieValue1;TeskCookieKey2=TeskCookieValue2;" forHTTPHeaderField:@"Cookie"];
     [web loadRequest:request];
     //打开左划回退功能
     web.allowsBackForwardNavigationGestures = YES;
@@ -90,7 +99,7 @@
     }
     
     if ([console respondsToSelector:select]) {   //找到方法
-        [console performSelector:select];
+        [console performSelector:select withObject:nil afterDelay:0.3];
     } else {  //方法未找到
         NSLog(@"function couldn't find");
     }
@@ -187,13 +196,13 @@
     
 }
 
-//- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
-//{
-//    // 接口的作用是打开新窗口委托
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    // 接口的作用是打开新窗口委托
 //    [self createNewWebViewWithURL:webView.URL.absoluteString config:configuration];
-//
-//    return currentSubView.webView;
-//}
+
+    return webView;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
