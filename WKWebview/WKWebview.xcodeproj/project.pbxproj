@@ -343,6 +343,7 @@
 				4453CA731CE02E930021D900 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -63,7 +63,8 @@
  *  @param userContentController 用户的文本控制器
  *  @param message               通过JS传递过来的内容
  */
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
+- (void)userContentController:(WKUserContentController *)userContentController
+      didReceiveScriptMessage:(WKScriptMessage *)message
 {
     Console *console = [[Console alloc] init];
     
@@ -118,7 +119,8 @@
     NSLog(@"%@",@"加载完成");
 }
 
-- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation
+      withError:(NSError *)error
 {
     //加载失败
     NSLog(@"didFailNavigation    %@",@"加载失败");
