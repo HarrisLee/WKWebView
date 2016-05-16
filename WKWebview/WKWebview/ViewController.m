@@ -13,13 +13,25 @@
 {
     WKWebView *web;
 }
+@property (strong,nonatomic) UIProgressView *progressView;
 @end
 
+
 @implementation ViewController
+
+- (UIProgressView *)progressView
+{
+    if (!_progressView) {
+        _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 3.0)];
+        [self.view addSubview:_progressView];
+    }
+    return _progressView;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
     WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
     config.preferences = [[WKPreferences alloc] init];
     config.preferences.minimumFontSize = 13.0;
@@ -54,6 +66,45 @@
     [self runPluginJS:@[@"Console",@"Base",@"Accelerometer"]];
     
     [self.view addSubview:web];
+    
+    [web addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
+    [web addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if ([keyPath isEqualToString:@"estimatedProgress"]) {
+        
+        if (object == web) {
+            [self.progressView setAlpha:1.0f];
+            [self.progressView setProgress:web.estimatedProgress animated:YES];
+            
+            if(web.estimatedProgress >= 1.0f) {
+                [UIView animateWithDuration:0.3 delay:0.3 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    [self.progressView setAlpha:0.0f];
+                } completion:^(BOOL finished) {
+                    [self.progressView setProgress:0.0f animated:NO];
+                }];
+            }
+        }
+        else
+        {
+            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        }
+    }
+    else if ([keyPath isEqualToString:@"title"])
+    {
+        if (object == web) {
+            self.title = web.title;
+        }
+        else
+        {
+            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)runPluginJS:(NSArray *)plugins
@@ -63,6 +114,12 @@
         NSString *js = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
         [web evaluateJavaScript:js completionHandler:nil];
     }
+}
+
+- (void)dealloc
+{
+    [web removeObserver:self forKeyPath:@"estimatedProgress"];
+    [web removeObserver:self forKeyPath:@"title"];
 }
 
 #pragma mark WKScriptMessageHandler
