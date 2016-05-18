@@ -39,7 +39,9 @@
     config.preferences.javaScriptCanOpenWindowsAutomatically = YES;
     
     WKUserContentController *userController = [[WKUserContentController alloc] init];
-    /*! 需要先注册一下这个JS的方法名称。 否则无法响应，  同时实现WKScriptMessageHandler代理*/
+    /*! 需要先注册一下这个JS的方法名称。 否则无法响应，  同时实现WKScriptMessageHandler代理
+        window.webkit.messageHandlers.OOXX.postMessage()  //对应的方法
+     */
     [userController addScriptMessageHandler:self name:@"OOXX"];
     config.userContentController = userController;
     config.allowsPictureInPictureMediaPlayback = YES;  //是否支持视频以画中画的格式播放
