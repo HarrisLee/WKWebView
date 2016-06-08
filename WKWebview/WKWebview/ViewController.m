@@ -109,6 +109,7 @@
     }
 }
 
+//加载程序内的JS脚本
 - (void)runPluginJS:(NSArray *)plugins
 {
     for (NSString *jsPtah in plugins) {
@@ -259,7 +260,6 @@
 {
     // 接口的作用是打开新窗口委托
 //    [self createNewWebViewWithURL:webView.URL.absoluteString config:configuration];
-
     return webView;
 }
 
